@@ -1,0 +1,12 @@
+GlobeChat v1.1 PFP click fix
+
+No additional SQL is required if upgrade-display-name-pfp-fix.sql already ran successfully.
+
+Change profile picture now:
+1. Click Account & Profile.
+2. Click Change profile picture.
+3. The file picker opens immediately.
+4. Pick PNG/JPG/WEBP/GIF <= 5 MB.
+5. Upload starts automatically and the UI shows Uploading / Updated / Failed.
+
+Also fixed duplicate logout button IDs.

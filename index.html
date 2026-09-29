@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GlobeChat v1.1</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#08101f;color:#edf4ff;font-family:Inter,system-ui,sans-serif}.app{height:100vh;display:grid;grid-template-columns:255px minmax(0,1fr);overflow:hidden}.side{background:#0c1526;border-right:1px solid #263650;padding:16px;display:flex;flex-direction:column}.brand{display:flex;gap:10px;align-items:center;margin-bottom:18px}.logo{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#62a8ff,#8c7cff)}.muted{font-size:12px;color:#93a2bc}.rooms{flex:1;overflow:auto}.room{width:100%;display:flex;gap:8px;align-items:center;border:0;background:transparent;color:#b9c5d8;border-radius:10px;padding:10px;text-align:left;font:inherit;cursor:pointer}.room:hover,.room.active{background:#172846;color:white}.trash{margin-left:auto;color:#ff8397}.new{border:1px solid #30425f;background:#101a2d;color:white;border-radius:10px;padding:10px;font-weight:700;cursor:pointer}.main{height:100vh;min-width:0;display:flex;flex-direction:column}.top{height:70px;flex:none;background:#0c1526;border-bottom:1px solid #263650;padding:0 20px;display:flex;align-items:center;justify-content:space-between;z-index:3}.top small{display:block;color:#93a2bc;margin-top:3px}.status{font-size:12px;color:#93a2bc}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#54d18a;margin-right:7px}.tools{height:50px;flex:none;padding:8px 16px;background:#0a1322;border-bottom:1px solid #1e2c44;display:flex;gap:8px}.tools input{flex:1;max-width:460px}.field{background:#101a2d;border:1px solid #30425f;color:white;border-radius:9px;padding:9px 11px;font:inherit;outline:0}.btn{background:#101a2d;border:1px solid #30425f;color:white;border-radius:9px;padding:8px 12px;cursor:pointer}.messages{flex:1;overflow:auto;padding:20px}.msg{display:flex;gap:11px;max-width:850px;margin:0 auto;padding-top:2px;padding-bottom:2px}.avatar{width:38px;height:38px;flex:none;border-radius:50%;background:#192842;display:grid;place-items:center;font-weight:800;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover;display:block}.pfpPreview{width:82px;height:82px;border-radius:50%;background:#192842;display:grid;place-items:center;overflow:hidden;font-size:28px;font-weight:800;margin:8px 0 12px}.pfpPreview img{width:100%;height:100%;object-fit:cover;display:block}.meta{display:flex;gap:8px;align-items:baseline}.time{font-size:11px;color:#74849d}.text{margin-top:3px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45}.file{display:block;margin-top:7px;color:#8fc0ff;text-decoration:none}.preview{display:block;max-width:360px;max-height:280px;border-radius:9px;margin-top:8px}.empty{text-align:center;color:#8292ad;margin-top:70px}.composer{flex:none;background:#0c1526;border-top:1px solid #263650;padding:12px 18px 16px}.compose{max-width:850px;margin:auto;display:flex;gap:8px}.compose .field{flex:1}.send{border:0;border-radius:10px;padding:0 18px;background:linear-gradient(135deg,#62a8ff,#8c7cff);color:white;font-weight:800;cursor:pointer}.modal{display:none;position:fixed;inset:0;background:#000a;z-index:20;place-items:center}.modal.open{display:grid}.dialog{width:min(430px,calc(100% - 28px));background:#101a2d;border:1px solid #30425f;border-radius:15px;padding:19px}.dialog .field{width:100%;margin:6px 0 12px}.actions{display:flex;justify-content:flex-end;gap:8px}@media(max-width:700px){.app{grid-template-columns:1fr}.side{display:none}.messages{padding:14px}.top{padding:0 14px}}
+.videoPreview{display:block;max-width:min(560px,100%);max-height:420px;width:auto;height:auto;border-radius:12px;margin-top:8px;background:#000;border:1px solid #2a3954}
+.msg{position:relative;padding-left:8px;padding-right:8px;border-radius:8px;transition:background .12s}.msg+.msg:not(.chain){margin-top:14px}.msg:hover{background:#0d1829}.msgActions{position:absolute;right:8px;top:-12px;display:none;gap:4px;background:#101a2d;border:1px solid #30425f;border-radius:8px;padding:3px;z-index:2}.msg:hover .msgActions{display:flex}.msgAction{border:0;background:transparent;color:#b9c5d8;cursor:pointer;border-radius:6px;padding:5px 8px}.msgAction:hover{background:#1b2c48;color:white}.msg.chain{margin-top:0;padding-top:0;padding-bottom:0}.msg.chain .avatar{visibility:hidden;height:0;min-height:0}.msg.chain .meta{display:none}.msg.chain .text{margin-top:0;line-height:1.45}.msg.chain>div:nth-child(2){min-height:0}.msg.chain:hover:before{content:attr(data-short-time);position:absolute;left:-46px;top:7px;font-size:10px;color:#74849d}.replyPreview,.forwardCard{border-left:3px solid #617da8;background:#0d1829;border-radius:6px;padding:7px 9px;margin:0 0 6px;font-size:12px;color:#aebbd0;max-width:620px}.replyPreview b,.forwardCard b{color:#dce8fb}.replyBar{display:none;max-width:850px;margin:0 auto 8px;background:#101a2d;border:1px solid #30425f;border-radius:9px;padding:8px 10px;align-items:center;gap:8px;font-size:12px;color:#aebbd0}.replyBar.show{display:flex}.replyBar span{flex:1}.replyBar button{border:0;background:transparent;color:#cbd8ed;cursor:pointer}.forwardChoices{max-height:260px;overflow:auto;display:grid;gap:7px;margin:10px 0}.forwardChoice{width:100%;text-align:left}.videoPreview{display:block;max-width:min(560px,100%);max-height:420px;width:auto;height:auto;border-radius:12px;margin-top:8px;background:#000;border:1px solid #2a3954}
+</style></head><body>
+<div class="app"><aside class="side"><div class="brand"><div class="logo">🌐</div><div><b>GlobeChat</b><div class="muted">Global community</div></div></div><div class="muted">CHATS</div><div class="rooms" id="rooms"><button class="room active" id="global">🌎 GlobeChat</button></div><button class="new" id="groupMenu">＋ Join or create group</button><button class="btn" id="profileBtn" style="margin-top:8px">Account & username</button><button class="btn" id="logoutBtn" style="margin-top:8px">Log out</button><div class="muted" id="account" style="margin-top:14px">Signing in…</div></aside>
+<main class="main"><header class="top"><div><b id="title">GlobeChat</b><small id="subtitle"># global · everyone</small></div><div class="status" id="status"><span class="dot"></span>Starting…</div></header><div class="tools"><input class="field" id="search" placeholder="Search this chat…"><button class="btn" id="searchBtn">Search</button><button class="btn" id="clear">Clear</button></div><div id="groupActions" style="display:none;flex:none;padding:7px 16px;background:#0a1322;border-bottom:1px solid #1e2c44;gap:8px">
+<button class="btn" id="leaveGroup">Leave group</button>
+<button class="btn" id="deleteGroup" style="display:none;color:#ff9aab">Delete group</button>
+</div><section class="messages" id="messages"><div class="empty">Loading…</div></section><div class="composer"><div class="replyBar" id="replyBar"><span id="replyBarText"></span><button id="cancelReply" title="Cancel reply">✕</button></div><div class="compose"><button class="btn" id="attach">＋</button><input type="file" id="file" hidden><input class="field" id="input" maxlength="500" placeholder="Message GlobeChat…" disabled><button class="send" id="send" disabled>Send</button></div></div></main></div>
+<div class="modal" id="groupChooser"><div class="dialog">
+<h2>Private groups</h2>
+<p class="muted" style="margin-bottom:16px">What would you like to do?</p>
+<div style="display:grid;gap:10px">
+<button class="new" id="chooseJoin">🔒 Join a group</button>
+<button class="new" id="chooseCreate">＋ Create a group</button>
+<button class="btn" id="chooserCancel">Cancel</button>
+</div></div></div>
+<div class="modal" id="joinModal"><div class="dialog">
+<h2>Join a private group</h2>
+<label>Choose group</label>
+<select class="field" id="joinGroupSelect" style="width:100%;margin:6px 0 12px"></select>
+<label>6-digit passcode</label>
+<input class="field" id="joinPass" maxlength="6" inputmode="numeric" placeholder="123456">
+<div class="actions"><button class="btn" id="joinCancel">Cancel</button><button class="send" id="joinConfirm" style="padding:10px 14px">Join</button></div>
+</div></div>
+<div class="modal" id="modal"><div class="dialog"><h2>Create private group</h2><label>Name</label><input class="field" id="gname" maxlength="60"><label>6-digit passcode</label><input class="field" id="gpass" maxlength="6" inputmode="numeric"><div class="actions"><button class="btn" id="cancel">Cancel</button><button class="send" id="create" style="padding:10px 14px">Create</button></div></div></div>
+<div class="modal" id="forwardModal"><div class="dialog"><h2>Forward message</h2><p class="muted">Choose where to send this message.</p><div class="forwardChoices" id="forwardChoices"></div><div class="actions"><button class="btn" id="forwardCancel">Cancel</button></div></div></div>
+<div class="modal" id="authModal"><div class="dialog"><h2>GlobeChat account</h2><p class="muted">Sign in on any device with your email and password, or create a new account.</p><label>Email</label><input class="field" id="authEmail" type="email" autocomplete="email"><label>Password</label><input class="field" id="authPass" type="password" minlength="8" autocomplete="current-password"><div class="actions"><button class="btn" id="authSignup">Create account</button><button class="send" id="authLogin" style="padding:10px 14px">Log in</button></div></div></div>
+<div class="modal" id="profileModal"><div class="dialog"><h2>Account & profile</h2><p class="muted" id="uuidLine"></p><label><b>Profile picture</b></label><div class="pfpPreview" id="pfpPreview">?</div><input id="pfpFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+<div style="display:flex;gap:8px;margin-bottom:8px"><button class="btn" id="savePfp" type="button">📷 Change profile picture</button><button class="btn" id="removePfp" type="button">Remove profile picture</button></div>
+<p class="muted" id="pfpStatus">PNG, JPG, WEBP, or GIF · max 5 MB</p><label>Display name</label>
+<input class="field" id="displayName" maxlength="40" placeholder="Display name">
+<button class="btn" id="saveDisplayName" style="margin-bottom:14px">Save display name</button>
+<p class="muted">Display names can be changed anytime. Your @username is unique and has a 7-day cooldown.</p>
+<label>Username</label><input class="field" id="newUsername" maxlength="24"><p class="muted" id="usernameCooldown"></p><div class="actions"><button class="btn" id="profileCancel">Cancel</button><button class="send" id="changeUsername" style="padding:10px 14px">Change username</button><div style="margin-top:18px;padding-top:14px;border-top:1px solid #2a3954"><button class="btn" id="profileLogoutBtn" style="width:100%">Log out</button></div></div></div></div>
+</div>
+<script type="module">
+const SUPABASE_URL="https://tzauykiqupwlmlieqpvu.supabase.co";
+import{createClient}from"https://esm.sh/@supabase/supabase-js@2";
+const S=createClient("https://tzauykiqupwlmlieqpvu.supabase.co","sb_publishable_PHgBLaCI3tMPg0fp1hT4lw_yLOqPPW0"),$=x=>document.getElementById(x);
+let user,username,chat="global",oldest=null,busy=false,ch=null,pendingFile=null,groups=new Map,replyingTo=null,forwardingMessageId=null;
+function stat(t,ok=1){$("status").innerHTML='<span class="dot" style="background:'+(ok?"#54d18a":"#f0b34a")+'"></span>'+t}
+function forceChronologicalOrder(){
+  let box=$("messages"),rows=[...box.querySelectorAll(".msg")];
+  rows.sort((a,b)=>{let ta=Date.parse(a.dataset.createdAt||"")||0,tb=Date.parse(b.dataset.createdAt||"")||0;if(ta!==tb)return ta-tb;return Number(a.dataset.id||0)-Number(b.dataset.id||0)});
+  rows.forEach(r=>box.append(r)); updateMessageChains();
+}
+function updateMessageChains(){let prev=null;for(let r of $("messages").querySelectorAll(".msg")){let same=prev&&prev.dataset.senderId===r.dataset.senderId;r.classList.toggle("chain",!!same);prev=r}}
+const avatarCache=new Map();
+async function avatarUrl(uid){
+  if(!uid)return null;
+  if(avatarCache.has(uid))return avatarCache.get(uid);
+  let pr=await S.from("profiles").select("avatar_path").eq("id",uid).maybeSingle();
+  let path=pr.data?.avatar_path||null;
+  if(!path){avatarCache.set(uid,null);return null}
+  let encoded=path.split("/").map(encodeURIComponent).join("/");
+  let url=SUPABASE_URL+"/storage/v1/object/public/profile-pictures/"+encoded+"?v="+Date.now();
+  avatarCache.set(uid,url); return url;
+}
+const profileCache=new Map();
+async function publicProfile(uid,fallbackUsername){
+  if(!uid)return {username:fallbackUsername||"Guest",display_name:null};
+  if(profileCache.has(uid))return profileCache.get(uid);
+  let r=await S.from("profiles").select("username,display_name").eq("id",uid).maybeSingle();
+  let v=r.data||{username:fallbackUsername||"Guest",display_name:null};
+  profileCache.set(uid,v);return v;
+}
+async function paintAvatar(el,uid,fallback){
+  let url=await avatarUrl(uid);
+  el.textContent=(fallback||"G")[0].toUpperCase();
+  if(!url)return;
+  let im=document.createElement("img");im.alt="Profile picture";
+  im.onload=()=>{el.textContent="";el.append(im)};
+  im.onerror=()=>{console.error("Could not display profile picture:",url)};
+  im.src=url;
+}
+function escText(v){return v==null?"":String(v)}
+async function addReplyPreview(m,box){if(!m.reply_to_message_id)return;let q=await S.from("messages_v2").select("id,sender_id,username,content").eq("id",m.reply_to_message_id).maybeSingle();if(!q.data)return;let p=await publicProfile(q.data.sender_id,q.data.username);let d=document.createElement("div");d.className="replyPreview";let b=document.createElement("b");b.textContent="↪ "+(p.display_name||p.username)+": ";let sp=document.createElement("span");sp.textContent=(q.data.content||"Attachment").slice(0,120);d.append(b,sp);d.onclick=()=>document.querySelector(`[data-id="${q.data.id}"]`)?.scrollIntoView({behavior:"smooth",block:"center"});box.prepend(d)}
+async function addForwardCard(m,box){if(!m.forwarded_from_message_id&&!m.forwarded_content&&!m.forwarded_username)return;let d=document.createElement("div");d.className="forwardCard";let h=document.createElement("div"),b=document.createElement("b");b.textContent="Forwarded · "+(m.forwarded_display_name||m.forwarded_username||"Unknown");h.append(b);if(m.forwarded_username&&m.forwarded_display_name){let u=document.createElement("span");u.className="muted";u.textContent=" @"+m.forwarded_username;h.append(u)}let src=document.createElement("div");src.className="muted";src.textContent=m.forwarded_source||"Forwarded message";let tx=document.createElement("div");tx.className="text";tx.textContent=m.forwarded_content||"";d.append(h,src,tx);box.append(d);for(let f of (m.forwarded_attachments||[]))await renderAttachment(f,box)}
+async function renderAttachment(f,box,localFile=null){
+  if(!box||box.querySelector('[data-attachment-id="'+f.id+'"]'))return;
+  let signed=await S.storage.from("chat-files").createSignedUrl(f.storage_path,3600);
+  if(!signed.data)return;
+  let url=signed.data.signedUrl,wrap=document.createElement("div");
+  wrap.dataset.attachmentId=f.id;wrap.className="attachmentWrap";
+  if((f.mime_type||"").startsWith("image/")){
+    let im=document.createElement("img");im.className="preview";im.src=localFile?URL.createObjectURL(localFile):url;im.alt=f.file_name||"image";
+    wrap.append(im)
+  }else if((f.mime_type||"").startsWith("video/")){
+    let v=document.createElement("video");v.className="videoPreview";v.controls=true;v.preload="metadata";v.playsInline=true;
+    v.src=localFile?URL.createObjectURL(localFile):url;wrap.append(v)
+  }
+  let a=document.createElement("a");a.className="file";a.href=url;a.target="_blank";a.download=f.file_name||"attachment";a.textContent="📎 "+(f.file_name||"attachment");
+  wrap.append(a);box.append(wrap)
+}
+function beginReply(m){replyingTo={id:m.id,username:m.username,content:m.content};$("replyBarText").textContent="Replying to @"+m.username+" · "+(m.content||"attachment").slice(0,80);$("replyBar").classList.add("show");$("input").focus()}
+async function openForward(m){forwardingMessageId=m.id;let box=$("forwardChoices");box.innerHTML="";let g=document.createElement("button");g.className="btn forwardChoice";g.textContent="🌎 GlobeChat";g.onclick=()=>doForward(null);box.append(g);for(let [id,gr] of groups){let member=(await S.from("group_members").select("group_id").eq("group_id",id).eq("user_id",user.id).eq("active",true).maybeSingle()).data;if(!member)continue;let b=document.createElement("button");b.className="btn forwardChoice";b.textContent="💬 "+gr.name;b.onclick=()=>doForward(id);box.append(b)}$("forwardModal").classList.add("open")}
+async function doForward(dest){let r=await S.rpc("forward_message",{p_source_message_id:forwardingMessageId,p_destination_group_id:dest});if(r.error){alert("Forward failed: "+r.error.message);return}$("forwardModal").classList.remove("open");forwardingMessageId=null;if((dest===null&&chat==="global")||dest===chat)await latest()}
+function draw(m,pre=0){if(document.querySelector(`[data-id="${m.id}"]`))return;let r=document.createElement("article");r.className="msg";r.dataset.id=m.id;r.dataset.createdAt=m.created_at;r.dataset.senderId=m.sender_id;r.dataset.shortTime=new Date(m.created_at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});let a=document.createElement("div");a.className="avatar";a.textContent=(m.username||"G")[0].toUpperCase();paintAvatar(a,m.sender_id,m.username);let b=document.createElement("div"),meta=document.createElement("div");meta.className="meta";let n=document.createElement("b");n.textContent=m.username;publicProfile(m.sender_id,m.username).then(p=>{n.textContent=p.display_name||p.username;if(p.display_name){let u=document.createElement("span");u.className="muted";u.style.marginLeft="6px";u.textContent="@"+p.username;n.append(u)}});let t=document.createElement("span");t.className="time";t.textContent=new Date(m.created_at).toLocaleString();let x=document.createElement("div");x.className="text";x.textContent=m.content;meta.append(n,t);b.append(meta);addReplyPreview(m,b);if(m.content)b.append(x);addForwardCard(m,b);let acts=document.createElement("div");acts.className="msgActions";let rep=document.createElement("button");rep.className="msgAction";rep.textContent="↩ Reply";rep.onclick=()=>beginReply(m);let fwd=document.createElement("button");fwd.className="msgAction";fwd.textContent="↗ Forward";fwd.onclick=()=>openForward(m);acts.append(rep,fwd);r.append(a,b,acts);pre?$("messages").prepend(r):$("messages").append(r);loadAttachments(m.id,b);updateMessageChains()}
+async function loadAttachments(id,box){let{data}=await S.from("attachments").select("*").eq("message_id",id);for(let f of data||[])await renderAttachment(f,box)}
+async function auth(){
+ let session=(await S.auth.getSession()).data.session;
+ if(!session){$("authModal").classList.add("open");throw Error("Please log in or create an account.")}
+ user=session.user;
+ let p=(await S.from("profiles").select("username,username_changed_at").eq("id",user.id).maybeSingle()).data;
+ if(p)username=p.username;
+ else{
+   let u=prompt("Choose your unique display username (3-24 letters, numbers, underscores):");
+   if(!u)throw Error("A username is required.");
+   let r=await S.rpc("claim_username",{p_username:u});if(r.error)throw r.error;username=r.data;
+ }
+ $("account").textContent="@"+username;
+}
+
+async function queryMessages(older=0){let q=S.from("messages_v2").select("id,sender_id,username,content,created_at,reply_to_message_id,forwarded_from_message_id,forwarded_content,forwarded_username,forwarded_display_name,forwarded_source,forwarded_attachments").order("created_at",{ascending:false}).limit(30);q=chat==="global"?q.eq("is_global",true):q.eq("chat_id",chat);if(older&&oldest)q=q.lt("created_at",oldest);let r=await q;if(r.error)throw r.error;return r.data}
+async function latest(){
+  let d=await queryMessages();
+  $("messages").innerHTML="";
+  d.forEach(m=>draw(m));
+  forceChronologicalOrder();
+  let ordered=[...d].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+  oldest=ordered[0]?.created_at||null;
+  requestAnimationFrame(()=>{$("messages").scrollTop=$("messages").scrollHeight});
+}
+async function older(){
+  if(busy||!oldest)return;
+  busy=1;
+  let box=$("messages"),oldHeight=box.scrollHeight;
+  let d=await queryMessages(1);
+  if(d.length){
+    d.forEach(m=>draw(m));
+    forceChronologicalOrder();
+    let ordered=[...d].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+    oldest=ordered[0].created_at;
+    box.scrollTop=box.scrollHeight-oldHeight;
+  }
+  busy=0;
+}
+$("messages").onscroll=()=>{if($("messages").scrollTop<80)older()};
+async function subscribe(){
+  if(ch)S.removeChannel(ch);
+  ch=S.channel("room-"+chat)
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"messages_v2"},p=>{
+      let m=p.new;
+      if((chat==="global"&&m.is_global)||(chat!=="global"&&m.chat_id===chat)){
+        draw(m);forceChronologicalOrder();$("messages").scrollTop=$("messages").scrollHeight
+      }
+    })
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"attachments"},async p=>{
+      let f=p.new,row=document.querySelector('[data-id="'+f.message_id+'"]');
+      if(!row)return;
+      let box=row.children[1];
+      if(box)await renderAttachment(f,box)
+    })
+    .subscribe()
+}
+async function loadGroups(){let r=await S.from("chat_groups").select("id,name,owner_id").order("name");if(r.error)throw r.error;document.querySelectorAll("[data-group]").forEach(x=>x.remove());groups.clear();for(let g of r.data){groups.set(g.id,g);let b=document.createElement("button");b.className="room";b.dataset.group=g.id;let label=document.createElement("span");
+let membership=(await S.from("group_members").select("group_id").eq("group_id",g.id).eq("user_id",user.id).eq("active",true).maybeSingle()).data;
+label.textContent=(membership?"💬 ":"🔒 ")+g.name;
+b.title=membership?"Open group":"Join group with passcode";
+b.append(label);if(g.owner_id===user.id){let del=document.createElement("span");del.className="trash";del.textContent="🗑";del.onclick=async e=>{e.stopPropagation();if(!confirm("Delete "+g.name+"?"))return;let z=await S.rpc("delete_private_group",{p_group_id:g.id});if(z.error)alert(z.error.message);else{if(chat===g.id)await openGlobal();await loadGroups()}};b.append(del)}b.onclick=()=>openGroup(g);$("rooms").append(b)}}
+async function openGlobal(){$("groupActions").style.display="none";chat="global";$("title").textContent="GlobeChat";$("subtitle").textContent="# global · everyone";$("input").placeholder="Message GlobeChat…";document.querySelectorAll(".room").forEach(x=>x.classList.remove("active"));$("global").classList.add("active");await subscribe();await latest()}
+async function openGroup(g){let member=(await S.from("group_members").select("group_id").eq("group_id",g.id).eq("user_id",user.id).eq("active",true).maybeSingle()).data;if(!member){let p=prompt("Enter the 6-digit passcode for "+g.name);if(p===null)return;let r=await S.rpc("join_private_group",{p_group_id:g.id,p_passcode:p});if(r.error){alert(r.error.message);return}}chat=g.id;$("groupActions").style.display="flex";$("leaveGroup").style.display=g.owner_id===user.id?"none":"inline-block";$("deleteGroup").style.display=g.owner_id===user.id?"inline-block":"none";$("title").textContent=g.name;$("subtitle").textContent="# private · members only";$("input").placeholder="Message "+g.name+"…";document.querySelectorAll(".room").forEach(x=>x.classList.remove("active"));document.querySelector(`[data-group="${g.id}"]`)?.classList.add("active");await subscribe();await latest()}
+
+$("leaveGroup").onclick=async()=>{
+ if(chat==="global")return;
+ let g=groups.get(chat); if(!g)return;
+ if(!confirm("Leave "+g.name+"? You will need its passcode to join again."))return;
+ let r=await S.rpc("leave_private_group",{p_group_id:g.id});
+ if(r.error){alert(r.error.message);return}
+ await openGlobal(); await loadGroups();
+};
+$("deleteGroup").onclick=async()=>{
+ if(chat==="global")return;
+ let g=groups.get(chat); if(!g)return;
+ if(!confirm("Permanently delete "+g.name+" and its messages?"))return;
+ let r=await S.rpc("delete_private_group",{p_group_id:g.id});
+ if(r.error){alert(r.error.message);return}
+ await openGlobal(); await loadGroups();
+};
+$("global").onclick=openGlobal;
+$("attach").onclick=()=>$("file").click();$("file").onchange=()=>{pendingFile=$("file").files[0]||null;$("attach").textContent=pendingFile?"✓":"＋"};
+$("send").onclick=async()=>{let content=$("input").value.trim();if(!content&&!pendingFile)return;if(pendingFile&&pendingFile.size>10485760){alert("Files must be 10 MB or smaller.");return}let uploadedLocalFile=pendingFile;$("send").disabled=1;let r=await S.from("messages_v2").insert({sender_id:user.id,username,content,is_global:chat==="global",chat_id:chat==="global"?null:chat,reply_to_message_id:replyingTo?.id||null}).select().single();if(r.error){alert(r.error.message);$("send").disabled=0;return}let uploadedAttachment=null;
+if(pendingFile){
+  let fileToUpload=pendingFile;
+  let path=user.id+"/"+crypto.randomUUID()+"-"+fileToUpload.name.replace(/[^A-Za-z0-9._-]/g,"_");
+  let up=await S.storage.from("chat-files").upload(path,fileToUpload,{contentType:fileToUpload.type||"application/octet-stream"});
+  if(up.error){
+    alert("File upload failed: "+up.error.message);
+  }else{
+    let ar=await S.from("attachments").insert({
+      message_id:r.data.id,
+      storage_path:path,
+      file_name:fileToUpload.name,
+      mime_type:fileToUpload.type||"application/octet-stream",
+      size_bytes:fileToUpload.size
+    }).select().single();
+    if(ar.error) alert("Attachment record failed: "+ar.error.message);
+    else uploadedAttachment=ar.data;
+  }
+}
+$("input").value="";
+replyingTo=null;$("replyBar").classList.remove("show");$("replyBarText").textContent="";
+pendingFile=null;
+$("file").value="";
+$("attach").textContent="＋";
+draw(r.data);
+if(uploadedAttachment){
+  let box=document.querySelector('[data-id="'+r.data.id+'"] > div:last-child');
+  if(box){
+    await renderAttachment(uploadedAttachment,box,uploadedLocalFile);
+  }
+}
+$("messages").scrollTop=$("messages").scrollHeight;
+$("send").disabled=0};
+$("input").onkeydown=e=>{if(e.key==="Enter")$("send").click()};
+$("searchBtn").onclick=async()=>{let s=$("search").value.trim();if(!s)return;let q=S.from("messages_v2").select("id,sender_id,username,content,created_at,reply_to_message_id,forwarded_from_message_id,forwarded_content,forwarded_username,forwarded_display_name,forwarded_source,forwarded_attachments").ilike("content","%"+s.replaceAll("%","")+"%").order("created_at",{ascending:true}).limit(100);q=chat==="global"?q.eq("is_global",true):q.eq("chat_id",chat);let r=await q;$("messages").innerHTML="";if(r.error){alert(r.error.message);return}r.data.forEach(draw)};
+$("clear").onclick=()=>{$("search").value="";latest()};
+$("cancelReply").onclick=()=>{replyingTo=null;$("replyBar").classList.remove("show");$("replyBarText").textContent=""};
+$("forwardCancel").onclick=()=>{$("forwardModal").classList.remove("open");forwardingMessageId=null};
+$("groupMenu").onclick=()=>{$("groupChooser").classList.add("open")};
+$("chooserCancel").onclick=()=>{$("groupChooser").classList.remove("open")};
+$("chooseCreate").onclick=()=>{$("groupChooser").classList.remove("open");$("modal").classList.add("open")};
+$("cancel").onclick=()=>{$("modal").classList.remove("open")};
+$("chooseJoin").onclick=async()=>{
+  $("groupChooser").classList.remove("open");
+  let sel=$("joinGroupSelect"); sel.innerHTML="";
+  let r=await S.from("chat_groups").select("id,name").order("name");
+  if(r.error){alert(r.error.message);return}
+  for(let g of r.data){
+    let m=(await S.from("group_members").select("group_id").eq("group_id",g.id).eq("user_id",user.id).eq("active",true).maybeSingle()).data;
+    if(!m){let o=document.createElement("option");o.value=g.id;o.textContent=g.name;sel.append(o)}
+  }
+  if(!sel.options.length){alert("There are no groups available for you to join.");return}
+  $("joinPass").value="";
+  $("joinModal").classList.add("open");
+};
+$("joinCancel").onclick=()=>{$("joinModal").classList.remove("open")};
+$("joinConfirm").onclick=async()=>{
+  let gid=$("joinGroupSelect").value,p=$("joinPass").value.trim();
+  if(!/^\d{6}$/.test(p)){alert("Passcode must be exactly 6 digits.");return}
+  let r=await S.rpc("join_private_group",{p_group_id:gid,p_passcode:p});
+  if(r.error){alert(r.error.message);return}
+  $("joinModal").classList.remove("open");
+  await loadGroups();
+  let g=groups.get(gid); if(g)await openGroup(g);
+};
+$("create").onclick=async()=>{let n=$("gname").value.trim(),p=$("gpass").value;if(!/^\d{6}$/.test(p)){alert("Passcode must be exactly 6 digits.");return}let r=await S.rpc("create_private_group",{p_name:n,p_passcode:p});if(r.error){alert(r.error.message);return}$("modal").classList.remove("open");$("gname").value=$("gpass").value="";await loadGroups();await openGroup(groups.get(r.data))};
+$("authLogin").onclick=async()=>{let email=$("authEmail").value.trim(),password=$("authPass").value;let r=await S.auth.signInWithPassword({email,password});if(r.error){alert(r.error.message);return}location.reload()};
+$("authSignup").onclick=async()=>{let email=$("authEmail").value.trim(),password=$("authPass").value;if(password.length<8){alert("Use a password with at least 8 characters.");return}let r=await S.auth.signUp({email,password});if(r.error){alert(r.error.message);return}if(!r.data.session){alert("Check your email to confirm the account, then come back and log in.");return}location.reload()};
+$("logoutBtn").onclick=async()=>{if(!confirm("Log out of GlobeChat on this device?"))return;await S.auth.signOut();location.reload()};
+$("profileBtn").onclick=async()=>{let p=(await S.from("profiles").select("username,display_name,username_changed_at,avatar_path").eq("id",user.id).single()).data;$("newUsername").value=p.username;$("displayName").value=p.display_name||p.username;$("uuidLine").textContent="Account UUID: "+user.id;let next=new Date(new Date(p.username_changed_at).getTime()+7*86400000);$("usernameCooldown").textContent=Date.now()>=next?"You can change your username now.":"Next username change: "+next.toLocaleString();let pv=$("pfpPreview");pv.textContent=(p.username||"?")[0].toUpperCase();avatarCache.delete(user.id);await paintAvatar(pv,user.id,p.username);$("profileModal").classList.add("open")};
+$("profileCancel").onclick=()=>$("profileModal").classList.remove("open");
+$("profileLogoutBtn").onclick=async()=>{if(!confirm("Log out of GlobeChat on this device?"))return;await S.auth.signOut();location.reload()};
+$("changeUsername").onclick=async()=>{let n=$("newUsername").value.trim();let r=await S.rpc("change_username",{p_username:n});if(r.error){alert(r.error.message);return}username=r.data;$("account").textContent="@"+username;$("profileModal").classList.remove("open");await latest()};
+
+$("saveDisplayName").onclick=async()=>{
+  let d=$("displayName").value.trim();
+  if(d.length<1||d.length>40){alert("Display name must be 1-40 characters.");return}
+  let r=await S.rpc("change_display_name",{p_display_name:d});
+  if(r.error){alert(r.error.message);return}
+  profileCache.delete(user.id);
+  await latest();
+  alert("Display name updated.");
+};
+$("savePfp").onclick=()=>{$("pfpFile").click()};
+$("pfpFile").onchange=async()=>{
+  let f=$("pfpFile").files[0]; if(!f)return;
+  let status=$("pfpStatus");
+  try{
+    if(!["image/png","image/jpeg","image/webp","image/gif"].includes(f.type))throw Error("Use a PNG, JPG, WEBP, or GIF image.");
+    if(f.size>5*1024*1024)throw Error("Profile pictures must be 5 MB or smaller.");
+    status.textContent="Uploading profile picture…";
+    $("savePfp").disabled=true;
+    let ext={"image/png":"png","image/jpeg":"jpg","image/webp":"webp","image/gif":"gif"}[f.type];
+    let q=await S.from("profiles").select("avatar_path").eq("id",user.id).single();
+    if(q.error)throw q.error;
+    let old=q.data?.avatar_path||null;
+    let path=user.id+"/avatar-"+Date.now()+"."+ext;
+    let up=await S.storage.from("profile-pictures").upload(path,f,{contentType:f.type,cacheControl:"3600",upsert:false});
+    if(up.error)throw up.error;
+    let pr=await S.rpc("set_avatar_path",{p_avatar_path:path});
+    if(pr.error){
+      await S.storage.from("profile-pictures").remove([path]);
+      throw pr.error;
+    }
+    if(old)await S.storage.from("profile-pictures").remove([old]);
+    avatarCache.delete(user.id);profileCache.delete(user.id);
+    let pv=$("pfpPreview");pv.textContent=(username||"?")[0].toUpperCase();
+    await paintAvatar(pv,user.id,username);
+    let verify=await S.from("profiles").select("avatar_path").eq("id",user.id).single();
+    if(verify.error||verify.data?.avatar_path!==path)throw Error("The picture uploaded, but the profile did not save its image path.");
+    status.textContent="Profile picture updated!";
+    $("pfpFile").value="";
+    await latest();
+  }catch(e){
+    console.error("PFP upload error:",e);
+    status.textContent="Upload failed: "+(e?.message||String(e));
+    alert("Profile picture upload failed: "+(e?.message||String(e)));
+  }finally{
+    $("savePfp").disabled=false;
+  }
+};
+$("removePfp").onclick=async()=>{let status=$("pfpStatus");status.textContent="Removing profile picture…";
+  let p=(await S.from("profiles").select("avatar_path").eq("id",user.id).single()).data;
+  if(p?.avatar_path)await S.storage.from("profile-pictures").remove([p.avatar_path]);
+  let r=await S.rpc("set_avatar_path",{p_avatar_path:null});
+  if(r.error){alert("Could not remove profile picture: "+r.error.message);return}
+  avatarCache.delete(user.id);profileCache.delete(user.id);let pv=$("pfpPreview");pv.textContent=(username||"?")[0].toUpperCase();status.textContent="Profile picture removed.";await latest();
+};
+async function start(){try{await auth();await loadGroups();await subscribe();await latest();$("input").disabled=0;$("send").disabled=0;stat("Connected")}catch(e){stat("Setup needed",0);$("messages").innerHTML='<div class="empty">'+e.message+"</div>"}}
+start();
+</script></body></html>
